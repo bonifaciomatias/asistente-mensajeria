@@ -1,0 +1,40 @@
+from sqlalchemy.orm import Session
+from app.models.contact import Contact
+from app.models.tag import ContactTag
+from app.models.prompt import Prompt
+
+DEFAULT_PROMPT = (
+    "Eres un asistente que responde mensajes de Messenger en nombre de su titular. "
+    "Responde en español neutro, con tono cercano y profesional. "
+    "Sé breve (1-3 frases). No inventes datos. No prometas nada que no se te haya "
+    "autorizado. Si no sabes algo, dilo y ofrece consultarlo. "
+    "Nunca menciones que eres una IA."
+)
+
+
+def select_prompt(db: Session, contact: Contact) -> tuple[Prompt | None, str]:
+    tag_ids = [ct.tag_id for ct in db.query(ContactTag).filter_by(contact_id=contact.id).all()]
+
+    # 1. Intentar por stage + tag
+    if tag_ids:
+        p = (
+            db.query(Prompt)
+            .filter(Prompt.active.is_(True), Prompt.stage == contact.stage, Prompt.tag_id.in_(tag_ids))
+            .order_by(Prompt.version.desc())
+            .first()
+        )
+        if p:
+            return p, p.system_prompt
+
+    # 2. Intentar por stage solo
+    p = (
+        db.query(Prompt)
+        .filter(Prompt.active.is_(True), Prompt.stage == contact.stage, Prompt.tag_id.is_(None))
+        .order_by(Prompt.version.desc())
+        .first()
+    )
+    if p:
+        return p, p.system_prompt
+
+    # 3. Fallback
+    return None, DEFAULT_PROMPT

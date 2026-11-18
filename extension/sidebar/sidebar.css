@@ -1,0 +1,9 @@
+body { font-family: system-ui, sans-serif; font-size: 13px; padding: 8px; }
+header { display: flex; justify-content: space-between; align-items: center; }
+h1 { font-size: 15px; margin: 0; }
+h2 { font-size: 12px; text-transform: uppercase; color: #555; margin: 12px 0 4px; }
+section { margin-bottom: 8px; }
+#events { list-style: none; padding: 0; margin: 0; }
+#events li { padding: 2px 0; border-bottom: 1px solid #eee; }
+.switch { display: flex; align-items: center; gap: 4px; font-size: 12px; }
+input[type="password"] { width: 100%; box-sizing: border-box; }

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <header>
+    <h1>Asistente</h1>
+    <label class="switch">
+      <input type="checkbox" id="pause-toggle">
+      <span>Pausado</span>
+    </label>
+  </header>
+
+  <section id="status">
+    <p>Backend: <span id="backend-status">desconocido</span></p>
+    <p>Permisos: <span id="hosts-status">desconocido</span></p>
+  </section>
+
+  <section>
+    <h2>Token de API</h2>
+    <input type="password" id="token-input" placeholder="Bearer token">
+    <button id="token-save">Guardar</button>
+  </section>
+
+  <section>
+    <h2>Últimos eventos</h2>
+    <ul id="events"></ul>
+  </section>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

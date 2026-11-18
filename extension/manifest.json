@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Asistente Mensajería",
+  "version": "0.1.0",
+  "description": "Asistente de respuestas para Telegram Web y Messenger",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "asistente@local",
+      "strict_min_version": "115.0"
+    }
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://web.telegram.org/*",
+    "http://127.0.0.1:8000/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.telegram.org/*"],
+      "js": ["content/telegram.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "sidebar_action": {
+    "default_title": "Asistente",
+    "default_panel": "sidebar/sidebar.html",
+    "default_icon": {
+      "16": "sidebar/icon-16.png",
+      "32": "sidebar/icon-32.png"
+    },
+    "open_at_install": true
+  },
+  "action": {
+    "default_title": "Abrir Asistente"
+  }
+}

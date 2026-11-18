@@ -1,0 +1,18 @@
+# Backend
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.pyc
+backend/*.db
+backend/.env
+backend/asistente.db
+backend/alembic.ini.bak
+
+# Extension
+extension/*.xpi
+extension/node_modules/
+
+# Sistema
+.DS_Store
+*.log
+*.swp
