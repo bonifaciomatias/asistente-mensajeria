@@ -1,8 +1,22 @@
 import random
+import re
 import subprocess
 import time
 
 from app.core.config import settings
+
+
+def normalize_for_xdotool(text: str) -> str:
+    """Normaliza texto para que xdotool pueda teclearlo sin problemas."""
+    text = (text or "")
+    text = re.sub(r"[“”]", '"', text)
+    text = re.sub(r"[‘’]", "'", text)
+    text = re.sub(r"[—–]", "-", text)
+    text = text.replace("…", "...")
+    # Emojis fuera del BMP: xdotool no los teclea como teclas físicas
+    text = re.sub(r"[\U00010000-\U0010FFFF]", "", text)
+    text = re.sub(r"\s+\n", "\n", text)
+    return text.strip()
 
 
 def _run(args: list[str]) -> subprocess.CompletedProcess:
@@ -32,7 +46,7 @@ def _chunk(text: str) -> list[str]:
     i = 0
     while i < len(text):
         size = random.randint(lo, hi)
-        chunks.append(text[i:i + size])
+        chunks.append(text[i : i + size])
         i += size
     return chunks
 
@@ -44,14 +58,15 @@ def _type_chunk(chunk: str) -> bool:
     return r.returncode == 0
 
 
-def write_to_active_window(text: str, *, press_enter: bool = True) -> tuple[bool, str | None]:
-    """
-    Escribe `text` en la ventana activa (debe ser Firefox con Telegram Web)
-    y opcionalmente pulsa Enter tras la ventana de gracia.
-    Devuelve (ok, error_msg).
-    """
+def write_to_active_window(
+    text: str, *, press_enter: bool = True
+) -> tuple[bool, str | None]:
     if not text:
         return False, "empty_text"
+
+    text = normalize_for_xdotool(text)
+    if not text:
+        text = ":)"
 
     ok, reason = _focus_ok()
     if not ok:
@@ -65,7 +80,6 @@ def write_to_active_window(text: str, *, press_enter: bool = True) -> tuple[bool
 
     if press_enter:
         time.sleep(settings.xdotool_enter_grace_s)
-        # Verificar foco otra vez: el operador pudo cambiar de ventana durante la escritura
         ok, reason = _focus_ok()
         if not ok:
             return False, f"lost_focus_before_enter:{reason}"

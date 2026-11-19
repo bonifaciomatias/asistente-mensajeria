@@ -46,6 +46,10 @@ browser.runtime.onMessage.addListener((message) => {
     addEvent(`msg=${result.message_id} → ${result.decision} (${result.rule_applied})`);
   } else if (message.type === "event_error") {
     addEvent(`error: ${message.error}`);
+  } else if (message.type === "draft_sent") {
+    addEvent(`✓ draft ${message.draftId} enviado: ${message.text}`);
+  } else if (message.type === "draft_failed") {
+    addEvent(`✗ draft ${message.draftId} falló: ${message.reason}`);
   }
 });
 
