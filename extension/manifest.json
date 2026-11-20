@@ -16,6 +16,7 @@
   ],
   "host_permissions": [
     "https://web.telegram.org/*",
+    "https://www.messenger.com/*",
     "http://127.0.0.1:8000/*"
   ],
   "background": {
@@ -26,6 +27,11 @@
     {
       "matches": ["https://web.telegram.org/*"],
       "js": ["content/telegram.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.messenger.com/*"],
+      "js": ["content/messenger.js"],
       "run_at": "document_idle"
     }
   ],
